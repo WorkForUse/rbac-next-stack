@@ -1,98 +1,148 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+RBAC System – NestJS + Next.js
+<p align="center"> <img src="data:image/png;base64,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" width="140"/> </p>
+Overview
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Production-ready Role-Based Access Control (RBAC) API built using NestJS (Backend) and Next.js (Frontend).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The system provides:
 
-## Description
+Secure authentication with JWT
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Dynamic role and permission management
 
-## Project setup
+Protected REST APIs
 
-```bash
-$ npm install
-```
+Swagger API documentation
 
-## Compile and run the project
+Modular scalable architecture
 
-```bash
-# development
-$ npm run start
+Tech Stack
+Backend
 
-# watch mode
-$ npm run start:dev
+NestJS
 
-# production mode
-$ npm run start:prod
-```
+TypeScript
 
-## Run tests
+REST API
 
-```bash
-# unit tests
-$ npm run test
+JWT Authentication
 
-# e2e tests
-$ npm run test:e2e
+Swagger API Docs
 
-# test coverage
-$ npm run test:cov
-```
+Frontend
 
-## Deployment
+Next.js
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+React
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Axios API integration
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+Installation
+npm install
+npm run start:dev
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Server runs on:
 
-## Resources
+http://localhost:3000
 
-Check out a few resources that may come in handy when working with NestJS:
+Swagger Docs:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+http://localhost:3000/api
+API Endpoints
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_actual_password
+Authentication APIs
+Method	Endpoint	Description	Auth Required
+POST	/auth/login	User login	❌
+POST	/auth/refresh	Refresh access token	✔
+GET	/auth/me	Get logged-in user info	✔
+POST	/auth/logout	Logout user	✔
+Users Module
 
-## Support
+Permission Required: view_users, manage_users
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Method	Endpoint	Description
+GET	/users	Get all users
+POST	/users	Create new user
+GET	/users/:id	Get single user
+PATCH	/users/:id	Update user
+DELETE	/users/:id	Delete user
+User Permission Management
+Method	Endpoint	Description
+POST	/users/:id/assign-permissions	Assign permissions to user
+POST	/users/:id/revoke-permissions	Remove permissions from user
+Roles Module
 
-## Stay in touch
+Permission Required: view_roles, manage_roles
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Method	Endpoint	Description
+GET	/roles	List roles
+POST	/roles	Create role
+GET	/roles/:id	Get role
+PATCH	/roles/:id	Update role
+DELETE	/roles/:id	Delete role
+Permissions Module
 
-## License
+Permission Required: view_permissions, manage_permissions
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Method	Endpoint	Description
+GET	/permissions	Get all permission atoms
+Leads Module
+
+Permissions: view_leads, manage_leads
+
+Method	Endpoint	Description
+GET	/leads	Get leads
+POST	/leads	Create lead
+GET	/leads/:id	Get lead
+PATCH	/leads/:id	Update lead
+DELETE	/leads/:id	Delete lead
+Tasks Module
+
+Permissions: view_tasks, manage_tasks
+
+Method	Endpoint	Description
+GET	/tasks	Get tasks
+POST	/tasks	Create task
+PATCH	/tasks/:id	Update task
+DELETE	/tasks/:id	Delete task
+Reports Module
+
+Permissions: view_reports
+
+Method	Endpoint	Description
+GET	/reports	Generate reports
+Audit Logs
+
+Permission: view_audit_logs
+
+Method	Endpoint	Description
+GET	/audit-logs	View system activity logs
+RBAC Workflow
+
+User logs in
+
+JWT token generated
+
+Token attached to API requests
+
+Backend checks:
+
+Role
+
+Permissions
+
+Access granted or denied
+
+Error Responses
+Status	Meaning
+400	Bad Request
+401	Unauthorized
+403	Forbidden
+429	Too Many Requests
+Author
+
+RBAC System – Full Stack Reference Project
+Built using NestJS + Next.jserence Project
+Built using NestJS + Next.js

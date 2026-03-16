@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
@@ -12,15 +12,15 @@ export class Report {
   @Column('text')
   content: string;
 
-  @Column()
-  type: string; // 'daily', 'weekly', 'monthly'
+  @Column({ default: 'monthly' })
+  type: 'daily' | 'weekly' | 'monthly';
 
   @ManyToOne(() => User)
   author: User;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: Date;
 }

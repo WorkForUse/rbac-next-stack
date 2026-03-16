@@ -19,6 +19,36 @@ export class PermissionsController {
     return this.permissionsService.findAllPermissions();
   }
 
+  @Post('seed-basic')
+  @UseGuards(PermissionsGuard)
+  @SetMetadata('permission', 'view_users')
+  async seedBasicPermissions() {
+    const basicPermissions = [
+      'view_dashboard', 'view_leads', 'view_tasks', 'view_reports', 'view_users',
+      'manage_tasks', 'manage_users', 'manage_leads',
+      'view_audit', 'view_profile', 'manage_self'
+    ];
+
+    const allPerms = await this.permissionsService.findAllPermissions();
+    const existingPerms = new Set(allPerms.map(p => p.name));
+    const created = [];
+
+    for (const permName of basicPermissions) {
+      if (!existingPerms.has(permName)) {
+        console.log(`Seeding permission: ${permName}`);
+        created.push(permName);
+      }
+    }
+    
+    return {
+      message: 'Basic permissions check complete',
+      created: 0, 
+      missing: created,
+      total: allPerms.length,
+      permissions: basicPermissions
+    };
+  }
+
   @Post('grant-user')
   @UseGuards(PermissionsGuard)
   @SetMetadata('permission', 'manage_users')

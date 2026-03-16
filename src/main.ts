@@ -29,7 +29,7 @@ async function bootstrap() {
 
   // Swagger setup
   const config = new DocumentBuilder()
-    .setTitle('Digital Pylot API')
+    .setTitle('Digital Pylot API RBAC SYSTEM')
     .setDescription('API for Digital Pylot app with PostgreSQL')
     .setVersion('1.0')
     .addBearerAuth()

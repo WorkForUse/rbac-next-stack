@@ -16,8 +16,13 @@ export class PermissionsGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    const permissions = await this.permissionsService.resolvePermissions(user.sub);
+    // Check if user already has permissions (from seed token or JWT payload)
+    if (user.permissions && Array.isArray(user.permissions)) {
+      return user.permissions.includes(requiredPermission);
+    }
 
+    // Otherwise, resolve from database
+    const permissions = await this.permissionsService.resolvePermissions(user.sub);
     return permissions.includes(requiredPermission);
   }
 }

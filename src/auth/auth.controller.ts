@@ -29,15 +29,25 @@ export class AuthController {
       status: 'active'
     };
 
+    // Map role name to roleId if provided
+    if (signupDto.role) {
+      const role = await this.usersService.findRoleByName(signupDto.role);
+      if (role) {
+        createUserDto.roleId = role.id;
+      }
+    }
+
     const user = await this.usersService.create(createUserDto);
-    // 'as any' casting to bypass potential type mismatch with AuthService
-    const { accessToken, refreshToken } = await this.authService.login(user as any);
+    const { access_token, refresh_token, user: userData } = await this.authService.login(user as any);
     
-    // Setting cookies with Response type
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie('accessToken', access_token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie('refreshToken', refresh_token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
     
-    return { message: 'Signup successful' }; // passthrough: true ki wajah se return object response ban jata hai
+    return { 
+      message: 'Signup successful',
+      user: userData,
+      accessToken: access_token 
+    };
   }
 
   @Post('login')
@@ -46,21 +56,42 @@ export class AuthController {
     const user = await this.usersService.validateUser(loginDto.email, loginDto.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
-    const { accessToken, refreshToken } = await this.authService.login(user as any);
+    const { access_token, refresh_token, user: userData } = await this.authService.login(user as any);
     
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie('accessToken', access_token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie('refreshToken', refresh_token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
     
-    return { message: 'Login successful' };
+    return { 
+      message: 'Login successful',
+      user: userData,
+      accessToken: access_token 
+    };
   }
 
   @Post('refresh')
   async refresh(@Req() req: express.Request, @Res({ passthrough: true }) res: express.Response) {
-    const refreshToken = req.cookies['refreshToken'];
-    if (!refreshToken) throw new UnauthorizedException('No refresh token provided');
+    let refreshToken = req.cookies['refreshToken'];
+    
+    // If no refresh token in cookie, try Authorization header
+    if (!refreshToken) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        refreshToken = authHeader.substring(7);
+      }
+    }
+    
+    if (!refreshToken) {
+      throw new UnauthorizedException('No refresh token provided');
+    }
 
-    const { accessToken } = await this.authService.refreshToken(refreshToken);
-    return { accessToken };
+    // Delegate all token handling to authService
+    // It handles both JWT and seed data token cases
+    const result = await this.authService.refreshToken(refreshToken);
+    res.cookie('accessToken', result.access_token, { 
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production' 
+    });
+    return { access_token: result.access_token };
   }
 
   @Get('me')

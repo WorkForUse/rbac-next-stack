@@ -19,6 +19,6 @@ import { PermissionsModule } from '../permissions/permissions.module';
       signOptions: { expiresIn: '24h' },
     }),
   ],
-  exports: [AuthService, JwtAuthGuard, PermissionsGuard],
+  exports: [AuthService, JwtAuthGuard, PermissionsGuard, JwtModule],
 })
 export class AuthModule {}

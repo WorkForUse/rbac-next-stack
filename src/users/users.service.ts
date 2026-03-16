@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { Permission } from '../permissions/entities/permission.entity';
+import { Role } from '../roles/entities/role.entity';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,27 +15,51 @@ export class UsersService {
     private userRepository: Repository<User>,
     @InjectRepository(Permission)
     private permissionRepository: Repository<Permission>,
+    @InjectRepository(Role)
+    private roleRepository: Repository<Role>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     // TODO: Hash password with bcrypt before save
     try {
       const user = this.userRepository.create(createUserDto);
+      const savedUser = await this.userRepository.save(user);
 
       // Assign basic permissions for dynamic users (fully dynamic access)
+      // Auto-create if missing
       const basicPermNames = [
         'view_dashboard',
         'view_leads',
         'view_tasks', 
         'view_reports',
-        'view_users'
+        'view_users',
+        'manage_tasks',
+        'view_profile',
+        'manage_self'
       ];
-      const basicPerms = await this.permissionRepository.find({
-        where: basicPermNames.map(name => ({ name: name }))
-      });
-      user.permissions = basicPerms;
 
-      const savedUser = await this.userRepository.save(user);
+      const basicPerms: Permission[] = [];
+      
+      for (const permName of basicPermNames) {
+        let perm = await this.permissionRepository.findOne({ where: { name: permName } });
+        if (!perm) {
+          // Auto-create missing permission
+          console.log(`Creating missing permission: ${permName}`);
+          perm = this.permissionRepository.create({ name: permName });
+          await this.permissionRepository.save(perm);
+        }
+        basicPerms.push(perm);
+      }
+
+      // Properly link permissions using QueryBuilder for many-to-many
+      for (const perm of basicPerms) {
+        await this.userRepository
+          .createQueryBuilder()
+          .relation(User, 'permissions')
+          .of(savedUser.id)
+          .add(perm.id);
+      }
+
       // Load with relations for complete user data
       return this.userRepository.findOneOrFail({
         where: { id: savedUser.id },
@@ -126,5 +151,9 @@ export class UsersService {
       ...user,
       permissions: user.permissions?.map(p => p.name) || []
     }));
+  }
+
+  async findRoleByName(name: string) {
+    return this.roleRepository.findOne({ where: { name } });
   }
 }

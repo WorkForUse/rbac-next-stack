@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
@@ -12,15 +12,27 @@ export class Task {
   @Column({ nullable: true })
   description: string;
 
-  @Column()
-  status: string; // 'pending', 'in_progress', 'completed'
+  @Column({ default: 'pending' })
+  status: 'pending' | 'in-progress' | 'completed';
 
-  @ManyToOne(() => User)
-  assignedTo: User;
+  @Column({ type: 'date', nullable: true })
+  dueDate: string;
 
-  @Column()
+  @Column({ nullable: true })
+  dueTime: string;
+
+  @Column({ default: 'medium', nullable: true })
+  priority: 'low' | 'medium' | 'high';
+
+  @Column({ default: 'Personal', nullable: true })
+  category: string;
+
+  @ManyToOne(() => User, { nullable: true })
+  assignedTo?: User;
+
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: Date;
 }

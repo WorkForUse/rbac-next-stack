@@ -1,148 +1,1231 @@
-RBAC System – NestJS + Next.js
-<p align="center"> <img src="data:image/png;base64,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" width="140"/> </p>
-Overview
+# RBAC - Task Management & CRM System
 
-Production-ready Role-Based Access Control (RBAC) API built using NestJS (Backend) and Next.js (Frontend).
+RBAC is a comprehensive task management and Customer Relationship Management (CRM) system built with modern web technologies. It provides role-based access control, task management, team collaboration, audit logs, and comprehensive reporting features.
 
-The system provides:
+## 📋 Table of Contents
 
-Secure authentication with JWT
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation & Setup](#installation--setup)
+  - [Database Setup](#database-setup)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [Environment Variables](#environment-variables)
+- [API Documentation](#api-documentation)
+- [Running the Application](#running-the-application)
+- [JWT Secret Key Generation](#jwt-secret-key-generation)
+- [Features Overview](#features-overview)
 
-Dynamic role and permission management
+---
 
-Protected REST APIs
+## ✨ Features
 
-Swagger API documentation
+### Core Features
+- **User Management**: Create, read, update, and delete users with role-based permissions
+- **Task Management**: Create, assign, and track tasks with priorities and due dates
+- **Team Assignments**: Assign tasks to team members and track progress
+- **Role Management**: Define custom roles with specific permissions
+- **Permission System**: Granular control over user permissions
+- **Calendar Integration**: View tasks and events in calendar format
+- **Reminders**: Set reminders for important deadlines
+- **Audit Logs**: Track all user activities and changes
+- **Reports**: Generate comprehensive reports on tasks and team performance
+- **Authentication**: JWT-based secure authentication
 
-Modular scalable architecture
+---
 
-Tech Stack
-Backend
+## 🛠️ Tech Stack
 
-NestJS
+### Backend
+- **Framework**: NestJS (Node.js)
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: JWT (JSON Web Tokens)
+- **Validation**: Class Validator
+- **Logging**: Built-in NestJS Logger
 
-TypeScript
+### Frontend
+- **Framework**: Next.js 14+ (React)
+- **Styling**: Tailwind CSS
+- **HTTP Client**: Axios
+- **Icons**: Lucide React
+- **State Management**: React Hooks
 
-REST API
+---
 
-JWT Authentication
+## 📁 Project Structure
 
-Swagger API Docs
+```
+Digital-Pylot-Task/
+├── backend/
+│   ├── src/
+│   │   ├── main.ts                 # Application entry point
+│   │   ├── app.module.ts           # Root module
+│   │   ├── app.controller.ts       # Root controller
+│   │   ├── app.service.ts          # Root service
+│   │   ├── auth/                   # Authentication module
+│   │   ├── users/                  # User management module
+│   │   ├── roles/                  # Role management module
+│   │   ├── permissions/            # Permission management module
+│   │   ├── tasks/                  # Task management module
+│   │   ├── leads/                  # Leads management module
+│   │   ├── assignments/            # Task assignments module
+│   │   ├── reports/                # Reports module
+│   │   ├── audit-logs/             # Audit logging module
+│   │   └── dashboard/              # Dashboard analytics module
+│   ├── .env                        # Environment variables
+│   ├── data-source.ts              # Database connection config
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── layout.tsx          # Root layout
+│   │   │   ├── page.tsx            # Home page
+│   │   │   ├── (auth)/             # Authentication pages
+│   │   │   │   ├── login/
+│   │   │   │   └── signup/
+│   │   │   ├── (dashboard)/        # Dashboard pages
+│   │   │   │   ├── page.tsx        # Dashboard home
+│   │   │   │   ├── users/
+│   │   │   │   ├── roles/
+│   │   │   │   ├── permissions/
+│   │   │   │   ├── tasks/
+│   │   │   │   ├── leads/
+│   │   │   │   ├── assignments/
+│   │   │   │   ├── calendar/
+│   │   │   │   ├── reminders/
+│   │   │   │   ├── reports/
+│   │   │   │   ├── audit/
+│   │   │   │   └── settings/
+│   │   ├── components/             # Shared components
+│   │   ├── lib/                    # Utilities & helpers
+│   │   │   ├── axios.ts            # Axios configuration
+│   │   │   └── utils.ts
+│   │   └── globals.css             # Global styles
+│   ├── .env.local                  # Environment variables
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── .gitignore
+└── README.md
+```
 
-Frontend
+---
 
-Next.js
+## 📦 Prerequisites
 
-React
+Before you begin, ensure you have the following installed:
 
-Axios API integration
+- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
+- **npm** or **yarn** (comes with Node.js)
+- **PostgreSQL** (v12 or higher) - [Download](https://www.postgresql.org/download/)
+- **Git** - [Download](https://git-scm.com/)
+- **Postman** (optional, for API testing) - [Download](https://www.postman.com/downloads/)
 
-Installation
+### Verify Installation
+
+```bash
+node --version        # Should return v16+
+npm --version         # Should return 8+
+postgres --version    # Should return PostgreSQL version
+```
+
+---
+
+## 🚀 Installation & Setup
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/your-repo/Digital-Pylot-Task.git
+cd Digital-Pylot-Task
+```
+
+---
+
+### Database Setup
+
+#### Step 1: Start PostgreSQL Service
+
+**Windows:**
+```bash
+# PostgreSQL should auto-start or use Services app
+# Or via Command Prompt:
+pg_ctl -D "C:\Program Files\PostgreSQL\data" start
+```
+
+**macOS:**
+```bash
+brew services start postgresql
+```
+
+**Linux:**
+```bash
+sudo service postgresql start
+```
+
+#### Step 2: Create Database
+
+Connect to PostgreSQL:
+
+```bash
+psql -U postgres
+```
+
+Inside PostgreSQL shell:
+
+```sql
+-- Create database
+CREATE DATABASE digital_pylot;
+
+-- Verify creation
+\l
+
+-- Exit
+\q
+```
+
+#### Step 3: Verify Connection
+
+```bash
+psql -U postgres -d digital_pylot -c "SELECT version();"
+```
+
+You should see the PostgreSQL version output.
+
+---
+
+### Backend Setup
+
+#### Step 1: Navigate to Backend Directory
+
+```bash
+cd backend
+```
+
+#### Step 2: Install Dependencies
+
+```bash
 npm install
-npm run start:dev
+```
 
-Server runs on:
+#### Step 3: Setup Environment Variables
 
-http://localhost:3000
+Create a `.env` file in the `backend` directory:
 
-Swagger Docs:
-
-http://localhost:3000/api
-API Endpoints
+```env
+# Database Configuration
+DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
-DB_PASSWORD=your_actual_password
-Authentication APIs
-Method	Endpoint	Description	Auth Required
-POST	/auth/login	User login	❌
-POST	/auth/refresh	Refresh access token	✔
-GET	/auth/me	Get logged-in user info	✔
-POST	/auth/logout	Logout user	✔
-Users Module
+DB_PASSWORD=123
+DB_DATABASE=digital_pylot
 
-Permission Required: view_users, manage_users
+# JWT Configuration
+JWT_SECRET=cf36c55a6fe7bc6ec21961758d491d176a3f1efae7d4680b72cf76aed28dd8ff0185ec949fb48ae4096e79a7f5eee8b072ce27d93acd861ffc3301689c25299
+JWT_EXPIRES_IN=7d
 
-Method	Endpoint	Description
-GET	/users	Get all users
-POST	/users	Create new user
-GET	/users/:id	Get single user
-PATCH	/users/:id	Update user
-DELETE	/users/:id	Delete user
-User Permission Management
-Method	Endpoint	Description
-POST	/users/:id/assign-permissions	Assign permissions to user
-POST	/users/:id/revoke-permissions	Remove permissions from user
-Roles Module
+# Environment
+NODE_ENV=development
+PORT=3001
+```
 
-Permission Required: view_roles, manage_roles
+#### Step 4: Run Database Migrations
 
-Method	Endpoint	Description
-GET	/roles	List roles
-POST	/roles	Create role
-GET	/roles/:id	Get role
-PATCH	/roles/:id	Update role
-DELETE	/roles/:id	Delete role
-Permissions Module
+The database tables will be created automatically when the application starts (TypeORM will synchronize the schema).
 
-Permission Required: view_permissions, manage_permissions
+#### Step 5: Start Backend Server
 
-Method	Endpoint	Description
-GET	/permissions	Get all permission atoms
-Leads Module
+```bash
+npm run start:dev
+```
 
-Permissions: view_leads, manage_leads
+You should see:
+```
+[Nest] 12345 - 03/16/2026, 10:00:00 AM LOG [NestFactory] Starting Nest application...
+[Nest] 12345 - 03/16/2026, 10:00:00 AM LOG [InstanceLoader] AppModule dependencies initialized
+[Nest] 12345 - 03/16/2026, 10:00:00 AM LOG [RoutesResolver] AppController {/api}:
+[Nest] 12345 - 03/16/2026, 10:00:00 AM LOG Listen on port 3001
+```
 
-Method	Endpoint	Description
-GET	/leads	Get leads
-POST	/leads	Create lead
-GET	/leads/:id	Get lead
-PATCH	/leads/:id	Update lead
-DELETE	/leads/:id	Delete lead
-Tasks Module
+---
 
-Permissions: view_tasks, manage_tasks
+### Frontend Setup
 
-Method	Endpoint	Description
-GET	/tasks	Get tasks
-POST	/tasks	Create task
-PATCH	/tasks/:id	Update task
-DELETE	/tasks/:id	Delete task
-Reports Module
+#### Step 1: Navigate to Frontend Directory
 
-Permissions: view_reports
+```bash
+cd frontend
+```
 
-Method	Endpoint	Description
-GET	/reports	Generate reports
-Audit Logs
+#### Step 2: Install Dependencies
 
-Permission: view_audit_logs
+```bash
+npm install
+```
 
-Method	Endpoint	Description
-GET	/audit-logs	View system activity logs
-RBAC Workflow
+#### Step 3: Setup Environment Variables
 
-User logs in
+Create a `.env.local` file in the `frontend` directory:
 
-JWT token generated
+```env
+# Backend API URL
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
 
-Token attached to API requests
+# For production deployment:
+# NEXT_PUBLIC_API_URL=https://your-api-link.com/api
 
-Backend checks:
+# Node Environment
+NODE_ENV=development
+```
 
-Role
+#### Step 4: Start Frontend Server
 
-Permissions
+```bash
+npm run dev
+```
 
-Access granted or denied
+You should see:
+```
+ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+```
 
-Error Responses
-Status	Meaning
-400	Bad Request
-401	Unauthorized
-403	Forbidden
-429	Too Many Requests
-Author
+---
 
-RBAC System – Full Stack Reference Project
-Built using NestJS + Next.jserence Project
-Built using NestJS + Next.js
+## 🔐 Environment Variables
+
+### Backend (.env)
+
+```env
+# PostgreSQL Database Configuration
+DB_HOST=localhost           # Database host address
+DB_PORT=5432               # PostgreSQL default port
+DB_USERNAME=postgres       # Database username
+DB_PASSWORD=123            # Database password
+DB_DATABASE=digital_pylot  # Database name
+
+# JWT (JSON Web Token) Configuration
+JWT_SECRET=your_secret_key_here  # Secret key for signing JWTs
+JWT_EXPIRES_IN=7d               # Token expiration time (7 days)
+
+# Application Configuration
+NODE_ENV=development        # Environment (development/production)
+PORT=3001                   # Server port
+```
+
+**Important**: Change `DB_PASSWORD` to your PostgreSQL password and `JWT_SECRET` to a secure value in production.
+
+### Frontend (.env.local)
+
+```env
+# Backend API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+
+# For production deployment, use:
+# NEXT_PUBLIC_API_URL=https://your-production-api.com/api
+
+# Environment
+NODE_ENV=development
+```
+
+**Security Note**: Never commit `.env` files to version control. Add them to `.gitignore`.
+
+---
+
+## 📡 API Documentation
+
+### Base URL
+```
+http://localhost:3001/api
+```
+
+### Authentication
+
+All authenticated endpoints require a JWT token in the Authorization header:
+
+```
+Authorization: Bearer <your-jwt-token>
+```
+
+---
+
+### Core API Endpoints
+
+#### 1. **Authentication Module**
+
+##### POST /auth/signup
+Register a new user.
+
+**Request Body:**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "securePassword123"
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com",
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "permissions": ["view_dashboard", "manage_tasks"]
+}
+```
+
+---
+
+##### POST /auth/login
+Login user and get JWT token.
+
+**Request Body:**
+```json
+{
+  "email": "john@example.com",
+  "password": "securePassword123"
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com",
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "permissions": ["view_dashboard", "manage_tasks"]
+}
+```
+
+---
+
+#### 2. **User Management Module**
+
+##### GET /users
+Get all users (Admin only).
+
+**Query Parameters:**
+- `page` (optional): Page number (default: 1)
+- `limit` (optional): Items per page (default: 10)
+- `search` (optional): Search by name or email
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": { "id": 1, "name": "Admin" },
+      "isActive": true,
+      "createdAt": "2026-03-16T10:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "limit": 10
+}
+```
+
+---
+
+##### GET /users/:id
+Get user by ID.
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com",
+  "role": { "id": 1, "name": "Admin" },
+  "permissions": ["view_dashboard", "manage_tasks"],
+  "isActive": true,
+  "createdAt": "2026-03-16T10:00:00Z"
+}
+```
+
+---
+
+##### POST /users
+Create new user (Admin only).
+
+**Request Body:**
+```json
+{
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "password": "securePassword123",
+  "roleId": 2
+}
+```
+
+**Response:**
+```json
+{
+  "id": 2,
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "role": { "id": 2, "name": "Manager" },
+  "isActive": true,
+  "createdAt": "2026-03-16T10:30:00Z"
+}
+```
+
+---
+
+##### PUT /users/:id
+Update user (Admin or Self).
+
+**Request Body:**
+```json
+{
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com"
+}
+```
+
+**Response:**
+```json
+{
+  "id": 2,
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "role": { "id": 2, "name": "Manager" }
+}
+```
+
+---
+
+##### DELETE /users/:id
+Delete user (Admin only).
+
+**Response:**
+```json
+{
+  "message": "User deleted successfully"
+}
+```
+
+---
+
+#### 3. **Task Management Module**
+
+##### GET /tasks
+Get all tasks with filtering.
+
+**Query Parameters:**
+- `status` (optional): pending, completed, in-progress
+- `priority` (optional): low, medium, high
+- `assignedTo` (optional): User ID
+- `page` (optional): Page number
+- `limit` (optional): Items per page
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Setup Database",
+      "description": "Configure PostgreSQL database",
+      "status": "in-progress",
+      "priority": "high",
+      "dueDate": "2026-03-20",
+      "dueTime": "09:00",
+      "category": "Development",
+      "assignedTo": { "id": 2, "name": "Jane Doe" },
+      "createdBy": { "id": 1, "name": "John Doe" },
+      "createdAt": "2026-03-16T10:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1
+}
+```
+
+---
+
+##### GET /tasks/:id
+Get task by ID.
+
+**Response:**
+```json
+{
+  "id": 1,
+  "title": "Setup Database",
+  "description": "Configure PostgreSQL database",
+  "status": "in-progress",
+  "priority": "high",
+  "dueDate": "2026-03-20",
+  "dueTime": "09:00",
+  "category": "Development",
+  "assignedTo": { "id": 2, "name": "Jane Doe" },
+  "createdBy": { "id": 1, "name": "John Doe" },
+  "createdAt": "2026-03-16T10:00:00Z"
+}
+```
+
+---
+
+##### POST /tasks
+Create new task.
+
+**Request Body:**
+```json
+{
+  "title": "Setup Database",
+  "description": "Configure PostgreSQL database",
+  "priority": "high",
+  "dueDate": "2026-03-20",
+  "dueTime": "09:00",
+  "category": "Development",
+  "assignedToId": 2
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "title": "Setup Database",
+  "description": "Configure PostgreSQL database",
+  "status": "pending",
+  "priority": "high",
+  "dueDate": "2026-03-20",
+  "dueTime": "09:00",
+  "category": "Development"
+}
+```
+
+---
+
+##### PUT /tasks/:id
+Update task.
+
+**Request Body:**
+```json
+{
+  "title": "Setup Database (Updated)",
+  "status": "completed",
+  "priority": "medium"
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "title": "Setup Database (Updated)",
+  "status": "completed",
+  "priority": "medium"
+}
+```
+
+---
+
+##### PATCH /tasks/:id
+Partially update task (e.g., change status).
+
+**Request Body:**
+```json
+{
+  "status": "completed"
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "status": "completed"
+}
+```
+
+---
+
+##### DELETE /tasks/:id
+Delete task.
+
+**Response:**
+```json
+{
+  "message": "Task deleted successfully"
+}
+```
+
+---
+
+#### 4. **Role Management Module**
+
+##### GET /roles
+Get all roles.
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Admin",
+      "description": "Administrator with full access",
+      "permissions": [
+        { "id": 1, "name": "view_dashboard" },
+        { "id": 2, "name": "manage_users" }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+##### POST /roles
+Create new role (Admin only).
+
+**Request Body:**
+```json
+{
+  "name": "Manager",
+  "description": "Team manager with limited admin access",
+  "permissionIds": [1, 3, 4]
+}
+```
+
+**Response:**
+```json
+{
+  "id": 2,
+  "name": "Manager",
+  "description": "Team manager with limited admin access"
+}
+```
+
+---
+
+##### PUT /roles/:id
+Update role (Admin only).
+
+**Request Body:**
+```json
+{
+  "name": "Team Lead",
+  "permissionIds": [1, 3, 5]
+}
+```
+
+---
+
+##### DELETE /roles/:id
+Delete role (Admin only).
+
+---
+
+#### 5. **Permission Management Module**
+
+##### GET /permissions
+Get all permissions.
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "view_dashboard",
+      "description": "View main dashboard"
+    },
+    {
+      "id": 2,
+      "name": "manage_users",
+      "description": "Create, update, delete users"
+    }
+  ]
+}
+```
+
+---
+
+#### 6. **Reports Module**
+
+##### GET /reports
+Generate reports with filters.
+
+**Query Parameters:**
+- `type` (optional): tasks, users, performance
+- `startDate` (optional): YYYY-MM-DD
+- `endDate` (optional): YYYY-MM-DD
+
+**Response:**
+```json
+{
+  "type": "tasks",
+  "totalTasks": 50,
+  "completedTasks": 35,
+  "pendingTasks": 10,
+  "inProgressTasks": 5,
+  "completionRate": 0.70,
+  "averageCompletionTime": "5.3 days",
+  "tasksByPriority": {
+    "high": 15,
+    "medium": 25,
+    "low": 10
+  },
+  "tasksByStatus": {
+    "completed": 35,
+    "pending": 10,
+    "in-progress": 5
+  }
+}
+```
+
+---
+
+##### POST /reports
+Create custom report.
+
+**Request Body:**
+```json
+{
+  "title": "Q1 Performance Report",
+  "type": "performance",
+  "startDate": "2026-01-01",
+  "endDate": "2026-03-31",
+  "includeMetrics": ["completion_rate", "average_time", "team_performance"]
+}
+```
+
+---
+
+#### 7. **Audit Logs Module**
+
+##### GET /audit-logs
+Get audit logs (Admin only).
+
+**Query Parameters:**
+- `action` (optional): create, update, delete, login
+- `userId` (optional): Filter by user
+- `entityType` (optional): user, task, role
+- `page` (optional): Page number
+- `limit` (optional): Items per page
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "action": "UPDATE",
+      "entityType": "Task",
+      "entityId": 1,
+      "userId": 1,
+      "userName": "John Doe",
+      "changes": {
+        "status": { "from": "pending", "to": "completed" },
+        "priority": { "from": "high", "to": "medium" }
+      },
+      "timestamp": "2026-03-16T10:30:00Z",
+      "ipAddress": "192.168.1.1"
+    }
+  ],
+  "total": 100,
+  "page": 1
+}
+```
+
+---
+
+#### 8. **Dashboard Module**
+
+##### GET /dashboard
+Get dashboard overview (summary statistics).
+
+**Response:**
+```json
+{
+  "totalUsers": 15,
+  "totalTasks": 50,
+  "completedTasks": 35,
+  "pendingTasks": 10,
+  "inProgressTasks": 5,
+  "totalRoles": 4,
+  "activeUsers": 12,
+  "taskCompletionRate": 0.70,
+  "topPerformers": [
+    {
+      "id": 2,
+      "name": "Jane Doe",
+      "completedTasks": 18,
+      "averageCompletionTime": "4.2 days"
+    }
+  ],
+  "recentActivities": [
+    {
+      "id": 1,
+      "action": "Task Completed",
+      "description": "Jane Doe completed 'Setup Database'",
+      "timestamp": "2026-03-16T10:30:00Z"
+    }
+  ]
+}
+```
+
+---
+
+#### 9. **Leads Module**
+
+##### GET /leads
+Get all leads.
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Acme Corporation",
+      "email": "contact@acme.com",
+      "phone": "+1-555-0123",
+      "company": "Acme Corp",
+      "status": "active",
+      "source": "website",
+      "value": 50000,
+      "assignedTo": { "id": 2, "name": "Jane Doe" },
+      "createdAt": "2026-03-16T10:00:00Z"
+    }
+  ]
+}
+```
+
+---
+
+#### 10. **Assignments Module**
+
+##### GET /assignments
+Get task assignments.
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "taskId": 1,
+      "taskTitle": "Setup Database",
+      "assignedTo": { "id": 2, "name": "Jane Doe" },
+      "assignedBy": { "id": 1, "name": "John Doe" },
+      "status": "accepted",
+      "priority": "high",
+      "dueDate": "2026-03-20"
+    }
+  ]
+}
+```
+
+---
+
+## 🐍 JWT Secret Key Generation
+
+### Generate a Secure JWT Secret
+
+You can generate a strong JWT secret using several methods:
+
+#### Method 1: Using OpenSSL (Recommended)
+
+```bash
+openssl rand -hex 64
+```
+
+**Output Example:**
+```
+cf36c55a6fe7bc6ec21961758d491d176a3f1efae7d4680b72cf76aed28dd8ff0185ec949fb48ae4096e79a7f5eee8b072ce27d93acd861ffc3301689c25299
+```
+
+#### Method 2: Using Node.js
+
+Create a file `generate-secret.js`:
+
+```javascript
+const crypto = require('crypto');
+
+// Generate 64 bytes of random data and convert to hex
+const secret = crypto.randomBytes(64).toString('hex');
+console.log('Your JWT Secret:');
+console.log(secret);
+```
+
+Run it:
+```bash
+node generate-secret.js
+```
+
+#### Method 3: Using Python
+
+```bash
+python -c "import secrets; print(secrets.token_hex(64))"
+```
+
+#### Method 4: Online Generator
+
+Use an online tool (for development only):
+- [Random.org](https://www.random.org/) - Generate random strings
+- [Passwordsgenerator.com](https://passwordsgenerator.com/)
+
+### Best Practices for JWT Secrets
+
+1. **Use Strong Secrets**: Minimum 32 characters, preferably 64+ characters
+2. **Keep It Secret**: Never commit to version control
+3. **Rotate Periodically**: Change secrets every 3-6 months in production
+4. **Use Environment Variables**: Store in `.env` file (not in code)
+5. **Different Secrets**: Use different secrets for development and production
+
+---
+
+## ▶️ Running the Application
+
+### Step 1: Start PostgreSQL
+
+```bash
+# Windows
+pg_ctl -D "C:\Program Files\PostgreSQL\data" start
+
+# macOS
+brew services start postgresql
+
+# Linux
+sudo service postgresql start
+```
+
+### Step 2: Start Backend (Terminal 1)
+
+```bash
+cd backend
+npm run start:dev
+```
+
+Expected output:
+```
+[Nest] 12345 - 03/16/2026, 10:00:00 AM LOG Listen on port 3001
+```
+
+### Step 3: Start Frontend (Terminal 2)
+
+```bash
+cd frontend
+npm run dev
+```
+
+Expected output:
+```
+ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+```
+
+### Step 4: Access the Application
+
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:3001/api](http://localhost:3001/api)
+
+---
+
+## 🧪 Testing the API
+
+### Using Postman
+
+1. **Download Postman**: [postman.com/downloads](https://www.postman.com/downloads/)
+2. **Import Collection**: Create a new collection for this project
+3. **Set Environment Variables**:
+   - `base_url`: http://localhost:3001/api
+   - `token`: Your JWT token from login response
+
+### Example Requests
+
+#### Login Request
+```
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "securePassword123"
+}
+```
+
+#### Get All Tasks
+```
+GET http://localhost:3001/api/tasks
+Authorization: Bearer <your-jwt-token>
+```
+
+#### Create Task
+```
+POST http://localhost:3001/api/tasks
+Authorization: Bearer <your-jwt-token>
+Content-Type: application/json
+
+{
+  "title": "New Task",
+  "description": "Task description",
+  "priority": "high",
+  "dueDate": "2026-03-25",
+  "dueTime": "14:00",
+  "category": "Development"
+}
+```
+
+---
+
+## 📊 Database Schema
+
+### Key Tables
+
+- **users**: Store user information
+- **roles**: Define user roles
+- **permissions**: Define system permissions
+- **user_roles**: Map users to roles
+- **role_permissions**: Map roles to permissions
+- **tasks**: Store tasks
+- **task_assignments**: Track task assignments
+- **leads**: Store leads information
+- **reports**: Store generated reports
+- **audit_logs**: Store activity logs
+
+---
+
+## 🔒 Security Features
+
+1. **JWT Authentication**: Secure token-based authentication
+2. **Role-Based Access Control**: Fine-grained permission system
+3. **Password Hashing**: Secure password storage
+4. **SQL Injection Prevention**: TypeORM parameterized queries
+5. **CORS Protection**: Cross-origin request validation
+6. **Input Validation**: Request data validation using Class Validator
+7. **Audit Logging**: Track all user activities
+
+---
+
+## 🐛 Troubleshooting
+
+### Backend won't start
+
+**Issue**: Port 3001 already in use
+```bash
+# Find process using port 3001
+lsof -i :3001      # macOS/Linux
+netstat -ano | findstr :3001  # Windows
+
+# Kill process
+kill -9 <PID>      # macOS/Linux
+taskkill /PID <PID> /F  # Windows
+```
+
+### Database connection error
+
+**Issue**: Can't connect to PostgreSQL
+```bash
+# Check PostgreSQL is running
+psql -U postgres -c "SELECT 1"
+
+# Check credentials in .env file match PostgreSQL setup
+# If password is wrong, reset it:
+psql -U postgres
+ALTER USER postgres WITH PASSWORD 'your_new_password';
+\q
+```
+
+### Frontend can't reach API
+
+**Issue**: API URL incorrect
+- Verify `NEXT_PUBLIC_API_URL` in `.env.local`
+- Ensure backend is running on port 3001
+- Check browser console for CORS errors
+
+### JWT Token Expired
+
+**Issue**: Token expired error
+- Login again to get a new token
+- Change `JWT_EXPIRES_IN` in backend `.env` if needed
+
+---
+
+## 📝 Common npm Commands
+
+### Backend
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server with hot reload
+npm run start:dev
+
+# Build for production
+npm run build
+
+# Run production build
+npm run start
+
+# Run tests
+npm run test
+
+# Lint code
+npm run lint
+```
+
+### Frontend
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Run production build
+npm start
+
+# Lint code
+npm run lint
+```
+
+---
+
+## 📚 Additional Resources
+
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [TypeORM Documentation](https://typeorm.io/)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [JWT.io](https://jwt.io/)
+
+---
+
+## 👥 Team & Support
+
+For issues, questions, or contributions, please:
+1. Check existing documentation
+2. Search GitHub issues
+3. Create a new issue with detailed description
+4. Contact the development team
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see LICENSE file for details.
+
+---
+
+**Last Updated**: March 16, 2026
+
+For the latest updates and improvements, visit the project repository Thanks - This RBAC SYSTEM IS CREATED BY MUHAMMAD HAMZA SHAHID!

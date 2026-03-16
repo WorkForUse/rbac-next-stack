@@ -8,7 +8,7 @@ export class Role {
 
   @Column({
     type: 'enum',
-    enum: ['Admin', 'Manager', 'Agent', 'Customer'],
+    enum: ['Admin', 'Manager', 'Agent', 'User', 'Customer'],
     unique: true,
   })
   name: string;

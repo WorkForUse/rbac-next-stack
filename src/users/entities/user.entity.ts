@@ -25,5 +25,5 @@ export class User {
 
   @ManyToMany(() => Permission)
   @JoinTable()
-  permissions: Permission[]; // Individual atoms assigned to this user [cite: 4, 9]
+  permissions: Permission[];
 }

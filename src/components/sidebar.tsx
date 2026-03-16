@@ -1,97 +1,132 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
-import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, BookOpen, ClipboardList, BarChart3, FileText, LogOut } from 'lucide-react';
-import Link from 'next/link';
 
-const navItems = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, perm: 'view_dashboard' },
-  { name: 'Users', href: '/users', icon: Users, perm: 'manage_users' },
-  { name: 'Leads', href: '/leads', icon: BookOpen, perm: 'view_leads' },
-  { name: 'Tasks', href: '/tasks', icon: ClipboardList, perm: 'manage_tasks' },
-  { name: 'Reports', href: '/reports', icon: BarChart3, perm: 'view_reports' },
-  { name: 'Audit Log', href: '/audit', icon: FileText, perm: 'view_audit' },
-];
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  LayoutDashboard, Users, ClipboardList, Calendar, 
+  FileText, Settings, MessageSquare, ChevronLeft, 
+  ChevronRight, HelpCircle, BarChart3, LogOut
+} from "lucide-react";
+
+// Helper components for cleaner code
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role?: {
+    name: string;
+  };
+  permissions?: string[];
+}
+
+const NavItem = ({ item, active, open }: { item: any, active: boolean, open: boolean }) => {
+  const Icon = item.icon;
+  return (
+    <Link
+      href={item.href}
+      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group
+        ${active ? "bg-white text-orange-600 shadow-sm font-medium" : "text-gray-600 hover:bg-white/50 hover:text-gray-900"}`}
+    >
+      <Icon size={18} className={active ? "text-orange-600" : "text-gray-400 group-hover:text-gray-600"} />
+      {open && <span>{item.name}</span>}
+    </Link>
+  );
+};
 
 export default function Sidebar() {
-  const [permissions, setPermissions] = useState<string[]>([]);
-  const [userRole, setUserRole] = useState('');
-  const [userName, setUserName] = useState('');
+  const [open, setOpen] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
-  const fetchUserData = useCallback(() => {
+  useEffect(() => {
     const userData = localStorage.getItem('userData');
     if (userData) {
-      try {
-        const user = JSON.parse(userData);
-        setPermissions(user.permissions || []);
-        setUserRole(user.role || '');
-        setUserName(user.name || '');
-      } catch (error) {
-        console.error('Failed to parse user data:', error);
-      }
+      setUser(JSON.parse(userData));
     }
   }, []);
 
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
+  const handleLogout = async () => {
+    try {
+      // Clear local storage
+      localStorage.removeItem('userData');
+      // Redirect to login
+      router.push('/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
 
   return (
-    <aside className="w-64 bg-gradient-to-b from-[#FF7A50] to-[#FF6B3D] h-screen flex flex-col p-0 shadow-xl">
-      {/* Logo Section */}
-      <div className="bg-white/10 backdrop-blur-sm px-6 py-8 border-b border-white/20">
-        <div className="text-white font-bold text-2xl">RBAC</div>
-        <p className="text-white/70 text-xs mt-1">Digital Pylot</p>
+    <aside className={`${open ? "w-64" : "w-20"} h-screen bg-gradient-to-b from-[#F6E7DA] to-[#F3E1CF] border-r border-[#ead7c7] flex flex-col transition-all duration-300 relative`}>
+      
+      {/* Toggle Button - Fixed to right edge */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="absolute -right-3 top-8 bg-white border border-[#ead7c7] rounded-full p-1 shadow-sm hover:scale-110 transition-transform"
+      >
+        {open ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+      </button>
+
+      {/* Workspace Header */}
+      <div className="p-4 mt-2">
+        <div className={`flex items-center gap-3 bg-white/50 p-2.5 rounded-xl border border-white/50 ${!open && 'justify-center'}`}>
+          <div className="w-8 h-8 rounded-lg bg-orange-500 text-white flex items-center justify-center font-bold text-sm shadow-inner">
+            {user?.name ? user.name[0].toUpperCase() : 'U'}
+          </div>
+          {open && (
+            <div className="overflow-hidden">
+              <p className="text-sm font-bold text-gray-800 truncate">
+                {user?.name ? `${user.name}'s workspace` : "User's workspace"}
+              </p>
+              <p className="text-[10px] text-gray-500 font-medium">
+                {user?.role?.name ? `${user.role.name}` : 'User'} #WID{user?.id || 'N/A'}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-        {navItems.map((item) => {
-          if (!permissions.includes(item.perm)) return null;
+      {/* Main Navigation Container */}
+      <div className="flex-1 px-3 space-y-6 overflow-y-auto scrollbar-hide">
+        
+        {/* Main Section */}
+        <div className="space-y-1">
+          {[
+            { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+            { name: "Leads", href: "/leads", icon: Users },
+            { name: "Opportunities", href: "/opportunities", icon: FileText },
+            { name: "Tasks", href: "/tasks", icon: ClipboardList },
+          ].map((item) => (
+            <NavItem key={item.name} item={item} active={pathname === item.href} open={open} />
+          ))}
+        </div>
 
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
-          
-          return (
-            <Link 
-              key={item.href} 
-              href={item.href}
-              className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${
-                isActive 
-                  ? 'bg-white text-[#FF6B3D] shadow-lg font-semibold' 
-                  : 'text-white hover:bg-white/20'
-              }`}
-            >
-              <Icon className="h-5 w-5 mr-3" />
-              <span className="text-sm">{item.name}</span>
-            </Link>
-          );
-        })}
-      </nav>
+        {/* Tasks Section */}
+        {open && <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold px-2">Tasks</p>}
+        <div className="space-y-1">
+          {[
+            { name: "Assignments", href: "/assignments", icon: ClipboardList },
+            { name: "Calendar", href: "/calendar", icon: Calendar },
+            { name: "Reminders", href: "/reminders", icon: Calendar },
+            { name: "Reports", href: "/reports", icon: BarChart3 },
+          ].map((item) => (
+            <NavItem key={item.name} item={item} active={pathname === item.href} open={open} />
+          ))}
+        </div>
+      </div>
 
-      {/* User Info & Logout */}
-      <div className="border-t border-white/20 px-4 py-6">
-        {userName && (
-          <div className="mb-4 px-2 py-3 bg-white/10 rounded-lg backdrop-blur-sm">
-            <p className="text-white/60 text-xs uppercase tracking-wider">User</p>
-            <p className="text-white font-semibold text-sm mt-1">{userName}</p>
-            <p className="text-white/80 text-xs mt-1 inline-block px-2 py-1 bg-white/20 rounded mt-2">
-              {userRole}
-            </p>
-          </div>
-        )}
-        <button 
-          onClick={() => {
-            document.cookie = 'accessToken=; path=/';
-            document.cookie = 'refreshToken=; path=/';
-            localStorage.removeItem('userData');
-            window.location.href = '/login';
-          }}
-          className="w-full flex items-center justify-center px-4 py-2 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-all duration-200 text-sm font-medium"
+      {/* Footer Settings */}
+      <div className="p-4 border-t border-black/5 space-y-1">
+        <NavItem item={{ name: "Help center", href: "/help-center", icon: HelpCircle }} active={pathname === "/help-center"} open={open} />
+        <NavItem item={{ name: "Settings", href: "/settings", icon: Settings }} active={pathname === "/settings"} open={open} />
+        <button
+          onClick={handleLogout}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 text-red-600 hover:bg-red-50 ${open ? '' : 'justify-center'}`}
         >
-          <LogOut className="h-4 w-4 mr-2" />
-          Logout
+          <LogOut size={18} />
+          {open && <span>Logout</span>}
         </button>
       </div>
     </aside>

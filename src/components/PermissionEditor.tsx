@@ -21,13 +21,10 @@ interface PermissionEditorProps {
 }
 
 export default function PermissionEditor({ targetUser, currentUserPermissions, onUpdate }: PermissionEditorProps) {
-  // targetUser: Jis user ki permissions change karni hain
-  // currentUserPermissions: Logged-in user (Manager/Admin) ki apni permissions (Grant Ceiling)
 
   const [selectedPermissions, setSelectedPermissions] = useState(targetUser.permissions || []);
   const [loading, setLoading] = useState(false);
 
-  // Saari possible permissions ki list (Backend se fetch ki ja sakti hai)
   const allAvailableAtoms: PermissionAtom[] = [
     { id: 'view_dashboard', label: 'Dashboard Access' },
     { id: 'manage_users', label: 'User Management' },
@@ -48,7 +45,6 @@ export default function PermissionEditor({ targetUser, currentUserPermissions, o
   const savePermissions = async () => {
     setLoading(true);
     try {
-      // Batch revoke all, then grant selected (simple impl)
       const currentPerms = targetUser.permissions || [];
       const toRevoke = currentPerms.filter(id => !selectedPermissions.includes(id));
       const toGrant = selectedPermissions.filter((id: string) => !currentPerms.includes(id));
@@ -81,7 +77,6 @@ export default function PermissionEditor({ targetUser, currentUserPermissions, o
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {allAvailableAtoms.map((atom) => {
-          // Grant Ceiling Check: Agar Manager ke paas ye permission nahi hai, toh wo disable hogi
           const isDisabled = !currentUserPermissions.includes(atom.id);
           
           return (

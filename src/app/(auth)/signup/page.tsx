@@ -3,9 +3,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { seedUsers } from '@/lib/seedData';
+import api from '@/lib/axios';
 
 export default function SignupPage() {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'User' });
+  
+  const roles = ['Admin', 'Manager', 'Agent', 'User', 'Customer'] as const;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -15,55 +18,30 @@ export default function SignupPage() {
     setLoading(true);
     setError('');
 
-    // Check if email already exists
-    if (seedUsers.some(u => u.email === formData.email)) {
-      setError('Email already registered');
-      setLoading(false);
-      return;
-    }
-
+    // Validation
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters');
       setLoading(false);
       return;
     }
 
-    // Add new user to seed data (in-memory, will reset on page reload)
-    const newUser = {
-      id: Math.max(...seedUsers.map(u => u.id)) + 1,
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      role: 'Agent',
-      status: 'active',
-      permissions: [
-        'view_dashboard',
-        'view_leads',
-        'view_tasks',
-        'view_reports',
-        'view_profile',
-        'manage_self'
-      ]
-    };
-    
-    seedUsers.push(newUser);
-    
-    // Auto-login after signup
-    setTimeout(() => {
-      const mockToken = btoa(JSON.stringify({ sub: newUser.id, email: newUser.email, role: newUser.role, permissions: newUser.permissions }));
-      document.cookie = `accessToken=${mockToken}; path=/`;
-      document.cookie = `refreshToken=${mockToken}; path=/`;
+    try {
+      // Backend signup with role
+      const response = await api.post('/auth/signup', formData);
+      const { user, accessToken } = response.data;
       
-      localStorage.setItem('userData', JSON.stringify({
-        id: newUser.id,
-        email: newUser.email,
-        role: newUser.role,
-        permissions: newUser.permissions,
-        name: newUser.name
-      }));
+      if (user && accessToken) {
+        localStorage.setItem('userData', JSON.stringify({ ...user, accessToken }));
+        router.push('/dashboard');
+      } else {
+        throw new Error('Invalid response from server');
+      }
       
-      router.push('/dashboard');
-    }, 500);
+    } catch (apiError: any) {
+      // No fallback - trust backend
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,23 +52,40 @@ export default function SignupPage() {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <input 
-            type="text" placeholder="Full Name"
+            type="text" placeholder="Full Name" required
             className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#FF6B3D]"
             onChange={(e) => setFormData({...formData, name: e.target.value})}
             value={formData.name}
           />
           <input 
-            type="email" placeholder="Email"
+            type="email" placeholder="Email" required
             className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#FF6B3D]"
             onChange={(e) => setFormData({...formData, email: e.target.value})}
             value={formData.email}
           />
           <input 
-            type="password" placeholder="Create a password"
+            type="password" placeholder="Create a password" required
             className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#FF6B3D]"
             onChange={(e) => setFormData({...formData, password: e.target.value})}
             value={formData.password}
           />
+
+          <select 
+            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#FF6B3D]"
+            value={formData.role}
+            onChange={(e) => setFormData({...formData, role: e.target.value})}
+            required
+          >
+            {roles.map((role) => (
+              <option key={role} value={role}>
+                {role === 'Admin' && 'Admin (Full Access)'}
+                {role === 'Manager' && 'Manager (Team Management)'}
+                {role === 'Agent' && 'Agent (Lead Assignment)'}
+                {role === 'User' && 'User (Basic Access)'}
+                {role === 'Customer' && 'Customer (View Only)'}
+              </option>
+            ))}
+          </select>
 
           {error && <p className="text-red-500 text-xs">{error}</p>}
 

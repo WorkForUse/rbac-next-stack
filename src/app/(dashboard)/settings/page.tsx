@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Settings, Shield, KeySquare } from 'lucide-react';
+import { Settings, Shield, KeySquare, Loader2, Save, X } from 'lucide-react';
 import api from '@/lib/axios';
 import PermissionEditor from '@/components/PermissionEditor';
 
@@ -23,7 +23,7 @@ export default function SettingsPage() {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeRole, setActiveRole] = useState<Role | null>(null);
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,111 +34,119 @@ export default function SettingsPage() {
         ]);
         setRoles(rolesRes.data);
         setPermissions(permsRes.data);
-        setLoading(false);
-      } catch (_err) {
+      } catch (err) {
+        console.error("Failed to load RBAC data", err);
+      } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
 
-  const handleEditRole = (role: Role) => {
-    setActiveRole(role);
-    setSelectedPermissions(role.permissions || []);
+  const handleSavePermissions = async () => {
+    if (!activeRole) return;
+    setSaving(true);
+    try {
+      await api.patch(`/roles/${activeRole.id}/permissions`, { 
+        permissions: activeRole.permissions 
+      });
+      alert("Permissions updated successfully!");
+      setActiveRole(null);
+    } catch (err) {
+      alert("Failed to save changes.");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleSavePermissions = () => {
-    setActiveRole(null);
-    setSelectedPermissions([]);
-  };
-
-  if (loading) return <div className="text-center py-12">Loading settings...</div>;
+  if (loading) return <div className="text-center py-20"><Loader2 className="animate-spin w-10 h-10 mx-auto text-[#FF6B3D]" /></div>;
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-[#FF6B3D]/10 rounded-xl">
-            <Settings className="w-6 h-6 text-[#FF6B3D]" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold">Settings</h1>
-            <p className="text-gray-500">Manage roles and permissions</p>
-          </div>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <div className="p-4 bg-orange-50 rounded-2xl">
+          <Settings className="w-8 h-8 text-[#FF6B3D]" />
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">System Settings</h1>
+          <p className="text-gray-500">Configure roles and granular access permissions.</p>
         </div>
       </div>
 
-      {/* Roles Section */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl shadow-sm border p-6">
-          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <Shield className="w-5 h-5 text-[#FF6B3D]" />
-            Roles
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Roles List */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+            <Shield className="w-5 h-5 text-[#FF6B3D]" /> Roles
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {roles.map((role) => (
-              <div key={role.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+              <div key={role.id} className="flex justify-between items-center p-5 bg-gray-50 rounded-xl border border-gray-100 hover:border-[#FF6B3D]/30 transition-all">
                 <div>
-                  <h3 className="font-semibold">{role.name}</h3>
-                  <p className="text-sm text-gray-500">{role.description || 'No description'}</p>
-                  <p className="text-xs text-gray-400">{role.permissions?.length || 0} permissions</p>
+                  <h3 className="font-bold text-gray-900">{role.name}</h3>
+                  <p className="text-sm text-gray-500">{role.description}</p>
                 </div>
                 <button
-                  onClick={() => handleEditRole(role)}
-                  className="px-4 py-2 bg-[#FF6B3D] text-white rounded-lg hover:bg-orange-500 text-sm transition"
+                  onClick={() => setActiveRole(role)}
+                  className="px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-[#FF6B3D] hover:text-white transition-colors text-sm font-bold"
                 >
-                  Edit Permissions
+                  Configure
                 </button>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Permissions Section */}
-        <div className="bg-white rounded-2xl shadow-sm border p-6">
-          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <KeySquare className="w-5 h-5 text-[#FF6B3D]" />
-            Permissions
+        {/* Permissions Inventory */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+            <KeySquare className="w-5 h-5 text-[#FF6B3D]" /> Available Permissions
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {permissions.map((perm) => (
-              <div key={perm.id} className="p-3 bg-gray-50 rounded-lg">
-                <h4 className="font-medium text-sm">{perm.name}</h4>
-                <p className="text-xs text-gray-500">{perm.resource}</p>
+              <div key={perm.id} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                <h4 className="font-bold text-xs uppercase text-gray-700">{perm.name}</h4>
+                <p className="text-[10px] text-gray-400 mt-1">{perm.resource}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Permission Editor Modal */}
+      {/* Permission Editor Modal - FULLY IMPLEMENTED */}
       {activeRole && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold">Edit {activeRole.name} Permissions</h3>
-              <button
-                onClick={() => {setActiveRole(null); setSelectedPermissions([]);}}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                ×
+              <button onClick={() => setActiveRole(null)} className="p-2 hover:bg-gray-100 rounded-full">
+                <X className="w-5 h-5 text-gray-500" />
               </button>
             </div>
+            
             <PermissionEditor
-              targetUser={{ id: activeRole.id.toString(), email: activeRole.name, permissions: selectedPermissions }}
+              targetUser={{ 
+                id: activeRole.id.toString(), 
+                email: activeRole.name, 
+                permissions: activeRole.permissions 
+              }}
               currentUserPermissions={permissions.map(p => p.name)}
-              onUpdate={handleSavePermissions}
+              onUpdate={(updatedPerms: any) => setActiveRole({ ...activeRole, permissions: updatedPerms })}
             />
-            <div className="flex gap-3 mt-6">
+
+            <div className="flex gap-3 mt-8">
               <button
                 onClick={handleSavePermissions}
-                className="flex-1 bg-[#FF6B3D] text-white py-3 px-6 rounded-xl hover:bg-orange-500 font-medium transition"
+                disabled={saving}
+                className="flex-1 flex items-center justify-center gap-2 bg-[#FF6B3D] text-white py-3 px-6 rounded-xl hover:bg-orange-500 font-bold transition disabled:opacity-70"
               >
-                Save Changes
+                {saving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />}
+                {saving ? 'Saving...' : 'Save Changes'}
               </button>
               <button
-                onClick={() => {setActiveRole(null); setSelectedPermissions([]);}}
-                className="px-6 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition"
+                onClick={() => setActiveRole(null)}
+                className="px-6 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 font-bold transition"
               >
                 Cancel
               </button>
